@@ -3,7 +3,7 @@ name: CI/CD for Simple-UI - Docker
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
