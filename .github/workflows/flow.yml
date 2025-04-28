@@ -1,4 +1,4 @@
-name: CI/CD for Simple-UI - Docker
+name: CI/CD for Simple-UI - Docker1
 
 on:
   push:
