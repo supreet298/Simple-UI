@@ -22,3 +22,24 @@ jobs:
             -Dsonar.host.url=%SONAR_HOST_URL% ^
             -Dsonar.token=%SONAR_TOKEN%
         shell: cmd
+
+  deploy-to-ec2:
+     needs: build
+     runs-on: ubuntu-latest
+     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: SSH to EC2 and Deploy Docker
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_PUBLIC_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/Simple-UI
+            sudo git pull origin master
+            sudo docker stop simpleapp || true
+            sudo docker rm simpleapp || true
+            sudo docker build -t simpleapp .
+            sudo docker run -d -p 8090:80 --name simpleapp simpleapp        
